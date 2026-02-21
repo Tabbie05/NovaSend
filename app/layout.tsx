@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Sora, Source_Sans_3 } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
+const display = Sora({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const body = Source_Sans_3({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
@@ -28,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${display.variable} ${body.variable} antialiased`}>
         <SessionProvider>
           <ThemeProvider>
             {children}

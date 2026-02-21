@@ -164,7 +164,7 @@ export function GenerateMessageForm({ channel, onSent }: GenerateMessageFormProp
             <button
               key={item.label}
               onClick={() => setContext(item.context)}
-              className="rounded-lg border border-[#EAEAEA] bg-white px-3 py-1.5 text-xs text-slate-600 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:bg-slate-50 active:scale-[0.98] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-lg border border-[#E7E1D8] bg-white px-3 py-1.5 text-xs text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white active:translate-y-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               {item.label}
             </button>
@@ -181,8 +181,8 @@ export function GenerateMessageForm({ channel, onSent }: GenerateMessageFormProp
               onClick={() => setTone(option.value)}
               className={`rounded-lg border px-3 py-2 text-sm transition-all duration-200 ${
                 tone === option.value
-                  ? "border-sky-500 bg-sky-50 text-sky-700 dark:bg-sky-900/20 dark:text-sky-300"
-                  : "border-[#EAEAEA] bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                  ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
+                  : "border-[#E7E1D8] bg-white text-slate-700 hover:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               {option.label}
@@ -201,7 +201,7 @@ export function GenerateMessageForm({ channel, onSent }: GenerateMessageFormProp
         Generate Message
       </Button>
 
-      <hr className="border-[#EAEAEA] dark:border-slate-700" />
+      <hr className="border-[#E7E1D8] dark:border-slate-700" />
 
       {isGenerating ? (
         <Card className="space-y-3 dark:hover:translate-y-0 dark:hover:shadow-sm">
@@ -212,9 +212,9 @@ export function GenerateMessageForm({ channel, onSent }: GenerateMessageFormProp
       ) : null}
 
       {generatedMessage ? (
-        <Card className="space-y-4">
+        <Card className="space-y-4 border-white/70 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 rounded-full border border-[#EAEAEA] bg-slate-50 px-2 py-1 text-[11px] text-slate-500 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 rounded-full border border-[#E7E1D8] bg-emerald-50 px-2 py-1 text-[11px] text-emerald-700">
               <BadgeCheck className="h-3.5 w-3.5" />
               AI Generated
             </span>

@@ -24,27 +24,32 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-8">
       <div className="page-enter">
-        <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-3xl">Welcome back, {firstName}</h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#E7E1D8] bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+          Workspace Overview
+        </div>
+        <h2 className="mt-4 font-display text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">
+          Welcome back, {firstName}
+        </h2>
+        <p className="mt-2 text-sm text-slate-600">
           Pick a channel and start generating conversion-focused messages in minutes.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {channels.map((channel) => {
           const Icon = channel.icon;
           return (
             <Link key={channel.href} href={channel.href}>
-              <Card className="h-full">
+              <Card className="h-full border-white/70 bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.12)]">
                 <div className="flex items-start gap-3">
-                  <span className="rounded-lg border border-[#EAEAEA] bg-slate-50 p-2 shadow-sm dark:border-slate-700 dark:bg-slate-700">
-                    <Icon className="h-5 w-5 text-slate-500" />
+                  <span className="rounded-xl border border-[#E7E1D8] bg-emerald-50 p-2 shadow-sm">
+                    <Icon className="h-5 w-5 text-emerald-600" />
                   </span>
                   <div>
                     <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{channel.title}</h3>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{channel.description}</p>
+                    <p className="mt-1 text-sm text-slate-600">{channel.description}</p>
                   </div>
                 </div>
               </Card>

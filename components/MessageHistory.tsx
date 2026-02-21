@@ -65,17 +65,17 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
   }, [channel, refreshTrigger, page, statusFilter]);
 
   return (
-    <Card className="hover:translate-y-0 hover:shadow-sm">
+    <Card className="border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(15,23,42,0.08)] hover:translate-y-0 hover:shadow-[0_26px_60px_rgba(15,23,42,0.12)]">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Recent Messages</h3>
-        <div className="inline-flex rounded-lg border border-[#EAEAEA] bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
+        <div className="inline-flex rounded-lg border border-[#E7E1D8] bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
           {(["all", "sent", "failed"] as StatusFilter[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
               className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
                 statusFilter === tab
-                  ? "bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  ? "bg-emerald-50 text-emerald-700 dark:bg-slate-700 dark:text-slate-100"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               }`}
             >
@@ -93,12 +93,12 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
             <LoadingSkeleton className="h-16 w-full" />
           </>
         ) : messages.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-[#EAEAEA] p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+          <div className="rounded-lg border border-dashed border-[#E7E1D8] p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
             No messages yet.
           </div>
         ) : (
           messages.map((msg) => (
-            <div key={msg._id} className="rounded-lg border border-[#EAEAEA] bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+            <div key={msg._id} className="rounded-xl border border-[#E7E1D8] bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
               <p className="line-clamp-2 text-sm text-slate-800 dark:text-slate-200">{msg.generatedMessage}</p>
               <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>{msg.recipientNumber}</span>
@@ -117,14 +117,14 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1 || loading}
-            className="rounded-lg border border-[#EAEAEA] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
+            className="rounded-lg border border-[#E7E1D8] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
           >
             Prev
           </button>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages || loading}
-            className="rounded-lg border border-[#EAEAEA] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
+            className="rounded-lg border border-[#E7E1D8] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
           >
             Next
           </button>

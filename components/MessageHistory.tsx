@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { MessageLog } from "@/types";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { Card } from "@/components/Card";
 
 interface MessageHistoryProps {
   channel: "whatsapp" | "sms";
@@ -27,7 +29,6 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -37,18 +38,15 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
         limit: "5",
         page: String(page),
       });
-
       if (statusFilter !== "all") {
         params.set("status", statusFilter);
       }
 
       const res = await fetch(`/api/messages?${params.toString()}`);
       const data: MessagesApiResponse = await res.json();
-
       if (data.success) {
         setMessages(data.data);
         setTotalPages(data.meta?.totalPages ?? 1);
-        setTotal(data.meta?.total ?? data.data.length);
       }
     } catch (error) {
       console.error("Failed to fetch message history", error);
@@ -66,135 +64,72 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel, refreshTrigger, page, statusFilter]);
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString("en-IN", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const toneColors: Record<string, string> = {
-    professional: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
-    friendly: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300",
-    urgent: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
-  };
-
-  const statusStyles: Record<"sent" | "failed", string> = {
-    sent: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300",
-    failed: "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
-  };
-
-  const tabs: Array<{ key: StatusFilter; label: string }> = [
-    { key: "all", label: "All" },
-    { key: "sent", label: "Sent" },
-    { key: "failed", label: "Failed" },
-  ];
-
   return (
-    <div className="h-[520px] flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          Recent Messages
-        </h3>
-        <span className="text-xs text-gray-400 dark:text-gray-500">Total: {total}</span>
+    <Card className="hover:translate-y-0 hover:shadow-sm">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Recent Messages</h3>
+        <div className="inline-flex rounded-lg border border-[#EAEAEA] bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
+          {(["all", "sent", "failed"] as StatusFilter[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setStatusFilter(tab)}
+              className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+                statusFilter === tab
+                  ? "bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="inline-flex p-1 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 mb-3">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setStatusFilter(tab.key)}
-            className={`px-3 py-1.5 text-xs rounded-lg font-semibold transition-colors ${
-              statusFilter === tab.key
-                ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex-1 overflow-auto rounded-xl border border-gray-200 dark:border-white/10">
+      <div className="space-y-2">
         {loading ? (
-          <div className="p-3 space-y-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-12 rounded-lg bg-gray-100 dark:bg-white/5 animate-pulse" />
-            ))}
-          </div>
+          <>
+            <LoadingSkeleton className="h-16 w-full" />
+            <LoadingSkeleton className="h-16 w-full" />
+            <LoadingSkeleton className="h-16 w-full" />
+          </>
         ) : messages.length === 0 ? (
-          <div className="text-center py-16 text-gray-400 dark:text-gray-500">
-            <p className="text-2xl mb-2">{channel === "whatsapp" ? "Message" : "SMS"}</p>
-            <p className="text-sm">No messages found</p>
-            <p className="text-xs mt-1">Try another filter or send a message</p>
+          <div className="rounded-lg border border-dashed border-[#EAEAEA] p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+            No messages yet.
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-gray-50 dark:bg-gray-900/80 backdrop-blur">
-              <tr className="border-b border-gray-200 dark:border-white/10 text-left">
-                <th className="px-3 py-2 font-semibold text-gray-500 dark:text-gray-400">Message</th>
-                <th className="px-3 py-2 font-semibold text-gray-500 dark:text-gray-400">To</th>
-                <th className="px-3 py-2 font-semibold text-gray-500 dark:text-gray-400">Tone</th>
-                <th className="px-3 py-2 font-semibold text-gray-500 dark:text-gray-400">Status</th>
-                <th className="px-3 py-2 font-semibold text-gray-500 dark:text-gray-400">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {messages.map((msg) => (
-                <tr key={msg._id} className="border-b border-gray-100 dark:border-white/5 align-top">
-                  <td className="px-3 py-2 text-gray-800 dark:text-gray-200 max-w-[210px]">
-                    <p className="line-clamp-2">{msg.generatedMessage}</p>
-                  </td>
-                  <td className="px-3 py-2 text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    {msg.recipientNumber}
-                  </td>
-                  <td className="px-3 py-2">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${
-                        toneColors[msg.tone] || ""
-                      }`}
-                    >
-                      {msg.tone}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${statusStyles[msg.status]}`}>
-                      {msg.status}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2 text-gray-400 dark:text-gray-500 whitespace-nowrap">
-                    {formatDate(msg.createdAt)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          messages.map((msg) => (
+            <div key={msg._id} className="rounded-lg border border-[#EAEAEA] bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+              <p className="line-clamp-2 text-sm text-slate-800 dark:text-slate-200">{msg.generatedMessage}</p>
+              <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                <span>{msg.recipientNumber}</span>
+                <span className={msg.status === "sent" ? "text-emerald-600" : "text-rose-600"}>
+                  {msg.status}
+                </span>
+              </div>
+            </div>
+          ))
         )}
       </div>
 
-      <div className="flex items-center justify-between pt-3">
-        <p className="text-xs text-gray-400 dark:text-gray-500">
-          Page {page} of {totalPages}
-        </p>
-        <div className="flex items-center gap-2">
+      <div className="mt-4 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <span>Page {page} of {totalPages}</span>
+        <div className="flex gap-2">
           <button
-            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1 || loading}
-            className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-lg border border-[#EAEAEA] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
           >
             Prev
           </button>
           <button
-            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages || loading}
-            className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-lg border border-[#EAEAEA] px-2.5 py-1 disabled:opacity-50 dark:border-slate-700"
           >
             Next
           </button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

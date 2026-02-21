@@ -1,55 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-
-function ErrorContent() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-
-  const errors: Record<string, { title: string; description: string }> = {
-    Configuration: {
-      title: "Configuration Error",
-      description: "There is a problem with the server configuration. Please contact support.",
-    },
-    AccessDenied: {
-      title: "Access Denied",
-      description: "You do not have permission to sign in.",
-    },
-    Verification: {
-      title: "Verification Failed",
-      description: "The sign in link is no longer valid.",
-    },
-    Default: {
-      title: "Authentication Error",
-      description: "An error occurred during authentication. Please try again.",
-    },
-  };
-
-  const errorInfo = errors[error || "Default"] || errors["Default"];
-
-  return (
-    <div className="min-h-screen flex items-center justify-center hero-gradient px-4">
-      <div className="text-center max-w-md">
-        <div className="text-6xl mb-6">⚠️</div>
-        <h1 className="text-2xl font-bold text-white mb-3">{errorInfo.title}</h1>
-        <p className="text-gray-400 mb-8">{errorInfo.description}</p>
-        <Link
-          href="/auth/signin"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-nova-600 to-violet-600 text-white font-semibold hover:opacity-90 transition-opacity"
-        >
-          Try Again
-        </Link>
-      </div>
-    </div>
-  );
-}
+import { AlertTriangle } from "lucide-react";
+import { Card } from "@/components/Card";
 
 export default function AuthErrorPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-950" />}>
-      <ErrorContent />
-    </Suspense>
+    <div className="app-shell flex min-h-screen items-center justify-center px-4">
+      <Card className="w-full max-w-md text-center hover:translate-y-0">
+        <div className="mx-auto mb-4 inline-flex rounded-lg border border-rose-200 bg-rose-50 p-2">
+          <AlertTriangle className="h-5 w-5 text-rose-600" />
+        </div>
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Authentication error</h1>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          We could not complete your sign-in request. Please try again.
+        </p>
+        <Link
+          href="/auth/signin"
+          className="mt-5 inline-flex rounded-lg border border-[#EAEAEA] bg-white px-4 py-2 text-sm text-slate-700 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:bg-slate-50 active:scale-[0.98] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+        >
+          Go to sign in
+        </Link>
+      </Card>
+    </div>
   );
 }

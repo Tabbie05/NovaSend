@@ -10,32 +10,27 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const stored = localStorage.getItem("novasend-theme") as Theme | null;
-    const preferred = stored || "dark";
-    setTheme(preferred);
-    document.documentElement.classList.toggle("dark", preferred === "dark");
+    const stored = (localStorage.getItem("novasend-theme") as Theme | null) || "light";
+    setTheme(stored);
+    document.documentElement.classList.toggle("dark", stored === "dark");
   }, []);
 
   const toggleTheme = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
+    const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     localStorage.setItem("novasend-theme", next);
     document.documentElement.classList.toggle("dark", next === "dark");
   };
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export const useTheme = () => useContext(ThemeContext);

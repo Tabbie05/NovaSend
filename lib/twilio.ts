@@ -26,6 +26,39 @@ export function getTwilioClient() {
   return twilio(accountSid, authToken);
 }
 
+function isTransientNetworkError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return ["ENOTFOUND", "EAI_AGAIN", "ETIMEDOUT", "ECONNRESET"].some((code) =>
+    message.includes(code)
+  );
+}
+
+async function sleep(ms: number) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function sendWithRetry(
+  sendFn: () => Promise<{ sid: string }>,
+  attempts = 3
+): Promise<{ sid: string }> {
+  let lastError: unknown;
+
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await sendFn();
+    } catch (error) {
+      lastError = error;
+      const canRetry = i < attempts - 1 && isTransientNetworkError(error);
+      if (!canRetry) {
+        throw error;
+      }
+      await sleep(350 * (i + 1));
+    }
+  }
+
+  throw lastError;
+}
+
 export async function sendSMS(to: string, body: string): Promise<string> {
   const client = getTwilioClient();
   const fromRaw = process.env.TWILIO_PHONE_NUMBER!;
@@ -35,11 +68,13 @@ export async function sendSMS(to: string, body: string): Promise<string> {
   const from = normalizePhoneE164(fromRaw);
   const toNumber = normalizePhoneE164(to);
 
-  const message = await client.messages.create({
-    body,
-    from,
-    to: toNumber,
-  });
+  const message = await sendWithRetry(() =>
+    client.messages.create({
+      body,
+      from,
+      to: toNumber,
+    })
+  );
 
   return message.sid;
 }
@@ -54,11 +89,13 @@ export async function sendWhatsApp(to: string, body: string): Promise<string> {
   const toWhatsApp = normalizeWhatsAppAddress(to);
 
   try {
-    const message = await client.messages.create({
-      body,
-      from: fromWhatsApp,
-      to: toWhatsApp,
-    });
+    const message = await sendWithRetry(() =>
+      client.messages.create({
+        body,
+        from: fromWhatsApp,
+        to: toWhatsApp,
+      })
+    );
 
     return message.sid;
   } catch (error) {

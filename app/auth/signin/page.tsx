@@ -96,7 +96,7 @@ export default function SignInPage() {
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-gray-500">secure & private</span>
+            <span className="text-xs ">secure & private</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -109,7 +109,7 @@ export default function SignInPage() {
             ].map((badge) => (
               <div key={badge.label} className="p-3 rounded-xl bg-white/5 border border-white/8">
                 <div className="text-lg mb-1">{badge.icon}</div>
-                <p className="text-xs text-gray-500">{badge.label}</p>
+                <p className="text-xs ">{badge.label}</p>
               </div>
             ))}
           </div>

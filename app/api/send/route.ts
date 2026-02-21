@@ -5,6 +5,8 @@ import { sendSMS, sendWhatsApp } from "@/lib/twilio";
 import { connectDB } from "@/lib/mongodb";
 import Message from "@/models/Message";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,6 +20,13 @@ export async function POST(req: NextRequest) {
     if (!to || !message || !channel) {
       return NextResponse.json(
         { success: false, error: "Missing required fields: to, message, channel" },
+        { status: 400 }
+      );
+    }
+
+    if (!["whatsapp", "sms"].includes(channel)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid channel. Use 'whatsapp' or 'sms'." },
         { status: 400 }
       );
     }

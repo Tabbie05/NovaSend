@@ -17,6 +17,7 @@ const geistMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "http://localhost:3000"),
   title: "NovaSend — AI-Powered Marketing Messages",
   description:
     "Generate and send AI-crafted marketing messages via WhatsApp and SMS. Powered by Gemini AI and Twilio.",

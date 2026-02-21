@@ -2,7 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   compiler: {
-    styledComponents: true, // only if using styled-components
+    styledComponents: true,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
   },
 };
 

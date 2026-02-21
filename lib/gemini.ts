@@ -1,6 +1,14 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const LIST_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models";
+const DEFAULT_MODEL = "gemini-2.5-flash";
+const STATIC_FALLBACK_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+];
+let cachedModels: string[] | null = null;
 
 export type MessageTone = "professional" | "friendly" | "urgent";
 
@@ -13,13 +21,59 @@ const toneDescriptions: Record<MessageTone, string> = {
     "compelling, time-sensitive tone. Use action-oriented language with a sense of urgency and limited-time offers.",
 };
 
+async function fetchSupportedModelNames(): Promise<string[]> {
+  if (cachedModels) return cachedModels;
+
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) return [];
+
+  try {
+    const res = await fetch(`${LIST_MODELS_URL}?key=${apiKey}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    if (!res.ok) return [];
+
+    const data = (await res.json()) as {
+      models?: Array<{
+        name?: string;
+        supportedGenerationMethods?: string[];
+      }>;
+    };
+
+    const models =
+      data.models
+        ?.filter((m) =>
+          (m.supportedGenerationMethods || []).includes("generateContent")
+        )
+        .map((m) => m.name || "")
+        .filter((name) => name.startsWith("models/"))
+        .map((name) => name.replace(/^models\//, "")) || [];
+
+    cachedModels = models;
+    return models;
+  } catch {
+    return [];
+  }
+}
+
+function rankModel(model: string): number {
+  if (/gemini-2\.5-flash/i.test(model)) return 100;
+  if (/gemini-2\.0-flash/i.test(model)) return 90;
+  if (/gemini-1\.5-flash/i.test(model)) return 80;
+  if (/flash/i.test(model)) return 70;
+  if (/gemini-2\.5-pro/i.test(model)) return 60;
+  if (/pro/i.test(model)) return 50;
+  if (/gemini/i.test(model)) return 40;
+  return 0;
+}
+
 export async function generateMarketingMessage(
   context: string,
   tone: MessageTone,
   channel: "whatsapp" | "sms"
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
   const channelGuidance =
     channel === "sms"
       ? "Keep it under 160 characters if possible. No emojis needed."
@@ -42,10 +96,35 @@ Rules:
 
 Generate the message now:`;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text().trim();
+  const envModel = process.env.GEMINI_MODEL?.trim();
+  const discoveredModels = await fetchSupportedModelNames();
+  const discoveredSorted = [...discoveredModels].sort(
+    (a, b) => rankModel(b) - rankModel(a)
+  );
+  const modelOrder = [
+    ...(envModel ? [envModel] : []),
+    DEFAULT_MODEL,
+    ...discoveredSorted,
+    ...STATIC_FALLBACK_MODELS,
+  ].filter((value, index, array) => array.indexOf(value) === index);
 
-  // Strip any accidental wrapping quotes
-  return text.replace(/^["']|["']$/g, "").trim();
+  let lastError: unknown;
+
+  for (const modelName of modelOrder) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text().trim();
+
+      // Strip any accidental wrapping quotes
+      return text.replace(/^["']|["']$/g, "").trim();
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  const fallbackMessage =
+    lastError instanceof Error ? lastError.message : "Failed to generate message";
+  throw new Error(fallbackMessage);
 }

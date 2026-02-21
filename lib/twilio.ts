@@ -3,6 +3,22 @@ import twilio from "twilio";
 const accountSid = process.env.TWILIO_ACCOUNT_SID!;
 const authToken = process.env.TWILIO_AUTH_TOKEN!;
 
+function normalizePhoneE164(value: string): string {
+  const trimmed = value.trim().replace(/\s+/g, "");
+  if (!trimmed.startsWith("+")) {
+    throw new Error("Phone number must include country code (E.164), e.g. +919876543210");
+  }
+  return trimmed;
+}
+
+function normalizeWhatsAppAddress(value: string): string {
+  const trimmed = value.trim().replace(/\s+/g, "");
+  if (trimmed.startsWith("whatsapp:")) {
+    return `whatsapp:${normalizePhoneE164(trimmed.replace(/^whatsapp:/, ""))}`;
+  }
+  return `whatsapp:${normalizePhoneE164(trimmed)}`;
+}
+
 export function getTwilioClient() {
   if (!accountSid || !authToken) {
     throw new Error("Twilio credentials are not configured");
@@ -12,14 +28,17 @@ export function getTwilioClient() {
 
 export async function sendSMS(to: string, body: string): Promise<string> {
   const client = getTwilioClient();
-  const from = process.env.TWILIO_PHONE_NUMBER!;
+  const fromRaw = process.env.TWILIO_PHONE_NUMBER!;
 
-  if (!from) throw new Error("TWILIO_PHONE_NUMBER is not configured");
+  if (!fromRaw) throw new Error("TWILIO_PHONE_NUMBER is not configured");
+
+  const from = normalizePhoneE164(fromRaw);
+  const toNumber = normalizePhoneE164(to);
 
   const message = await client.messages.create({
     body,
     from,
-    to,
+    to: toNumber,
   });
 
   return message.sid;
@@ -27,18 +46,23 @@ export async function sendSMS(to: string, body: string): Promise<string> {
 
 export async function sendWhatsApp(to: string, body: string): Promise<string> {
   const client = getTwilioClient();
-  const from = process.env.TWILIO_WHATSAPP_FROM!;
+  const fromRaw = process.env.TWILIO_WHATSAPP_FROM!;
 
-  if (!from) throw new Error("TWILIO_WHATSAPP_FROM is not configured");
+  if (!fromRaw) throw new Error("TWILIO_WHATSAPP_FROM is not configured");
 
-  // Ensure the to number has whatsapp: prefix
-  const toWhatsApp = to.startsWith("whatsapp:") ? to : `whatsapp:${to}`;
+  const fromWhatsApp = normalizeWhatsAppAddress(fromRaw);
+  const toWhatsApp = normalizeWhatsAppAddress(to);
 
-  const message = await client.messages.create({
-    body,
-    from,
-    to: toWhatsApp,
-  });
+  try {
+    const message = await client.messages.create({
+      body,
+      from: fromWhatsApp,
+      to: toWhatsApp,
+    });
 
-  return message.sid;
+    return message.sid;
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "Unknown Twilio error";
+    throw new Error(`${msg}. Using from=${fromWhatsApp}`);
+  }
 }

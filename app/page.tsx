@@ -1,6 +1,7 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { MessageCircle, Sparkles, Send } from "lucide-react";
 import { Card } from "@/components/Card";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 const features = [
   {
@@ -31,17 +32,20 @@ export default function LandingPage() {
             </span>
             <p className="font-display text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">NovaSend</p>
           </div>
-          <Link
-            href="/auth/signin"
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-[0_12px_30px_rgba(16,185,129,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-600"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
-            Sign in
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/auth/signin"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-[0_12px_30px_rgba(16,185,129,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-600"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
+              Sign in
+            </Link>
+            <DarkModeToggle />
+          </div>
         </div>
       </header>
 
-      <main className="relative mx-auto max-w-6xl px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
+      <main className="relative mx-auto max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-20">
         <div className="hero-glow" aria-hidden />
         <div className="hero-glow hero-glow--left" aria-hidden />
 
@@ -72,39 +76,39 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <Card className="page-enter relative border-white/60 bg-white/85 shadow-[0_24px_70px_rgba(15,23,42,0.15)] backdrop-blur">
+          <Card className="page-enter relative border-white/60 bg-white/85 shadow-[0_24px_70px_rgba(15,23,42,0.15)] backdrop-blur dark:bg-slate-900/75">
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Dashboard Preview</p>
             <div className="mt-4 space-y-3">
-              <div className="rounded-lg border border-[#E7E1D8] bg-white/80 p-3">
-                <p className="text-xs text-slate-500">Campaign Context</p>
-                <p className="mt-1 text-sm text-slate-700">Weekend sale for loyal customers, ending Sunday night.</p>
+              <div className="rounded-lg border border-[#E7E1D8] bg-white/80 p-3 dark:border-slate-700 dark:bg-slate-800/85">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Campaign Context</p>
+                <p className="mt-1 text-sm text-slate-700 dark:text-slate-200">Weekend sale for loyal customers, ending Sunday night.</p>
               </div>
-              <div className="rounded-lg border border-[#E7E1D8] bg-white p-3">
-                <p className="text-xs text-slate-500">AI Generated Preview</p>
-                <p className="mt-1 text-sm text-slate-800">
+              <div className="rounded-lg border border-[#E7E1D8] bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
+                <p className="text-xs text-slate-500 dark:text-slate-400">AI Generated Preview</p>
+                <p className="mt-1 text-sm text-slate-800 dark:text-slate-100">
                   Limited-time weekend offer: save up to 40% before Sunday midnight. Shop now.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500">WhatsApp</div>
-                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500">SMS</div>
+                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">WhatsApp</div>
+                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">SMS</div>
               </div>
             </div>
           </Card>
         </section>
 
-        <section id="features" className="relative z-10 mt-20">
-          <div className="section-panel p-6 md:p-10">
+        <section id="features" className="relative z-10 mt-16 sm:mt-20">
+          <div className="section-panel p-5 sm:p-6 md:p-10">
             <div className="grid gap-4 md:grid-cols-3">
               {features.map((feature) => {
                 const Icon = feature.icon;
                 return (
-                  <Card key={feature.title} className="border-transparent bg-white/90 shadow-[0_16px_40px_rgba(15,23,42,0.08)] hover:shadow-[0_22px_50px_rgba(15,23,42,0.12)]">
-                    <span className="inline-flex rounded-lg border border-[#E7E1D8] bg-emerald-50 p-2 shadow-sm">
+                  <Card key={feature.title} className="border-transparent bg-white/90 shadow-[0_16px_40px_rgba(15,23,42,0.08)] hover:shadow-[0_22px_50px_rgba(15,23,42,0.12)] dark:bg-slate-900/70">
+                    <span className="inline-flex rounded-lg border border-[#E7E1D8] bg-emerald-50 p-2 shadow-sm dark:border-slate-700 dark:bg-emerald-900/20">
                       <Icon className="h-5 w-5 text-emerald-600" />
                     </span>
-                    <h3 className="mt-4 text-base font-semibold text-slate-900">{feature.title}</h3>
-                    <p className="mt-2 text-sm text-slate-600">{feature.description}</p>
+                    <h3 className="mt-4 text-base font-semibold text-slate-900 dark:text-slate-100">{feature.title}</h3>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{feature.description}</p>
                   </Card>
                 );
               })}
@@ -112,9 +116,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative z-10 mt-20 rounded-3xl border border-[#E7E1D8] bg-gradient-to-br from-[#ECFDF5] via-white to-[#FFF7ED] p-8 shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
-          <h2 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">Ready for demo day?</h2>
-          <p className="mt-2 text-sm text-slate-600 sm:text-base">
+        <section className="relative z-10 mt-16 rounded-3xl border border-[#E7E1D8] bg-gradient-to-br from-[#ECFDF5] via-white to-[#FFF7ED] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.12)] dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 sm:mt-20 sm:p-8">
+          <h2 className="font-display text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-3xl">Ready for demo day?</h2>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 sm:text-base">
             Sign in and launch your first campaign flow in under five minutes.
           </p>
           <Link href="/auth/signin" className="mt-5 inline-block">
@@ -137,10 +141,12 @@ export default function LandingPage() {
             <span className="rounded-full border border-[#E7E1D8] bg-white px-3 py-1 text-[11px] text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
               Built with Next.js, Gemini, Twilio
             </span>
-            <span className="text-[11px] text-slate-500">© 2026 NovaSend</span>
+            <span className="text-[11px] text-slate-500">(c) 2026 NovaSend</span>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+

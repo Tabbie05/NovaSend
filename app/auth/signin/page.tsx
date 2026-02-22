@@ -7,6 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import { AlertCircle } from "lucide-react";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 export default function SignInPage() {
   const { data: session, status } = useSession();
@@ -40,18 +41,21 @@ export default function SignInPage() {
     <div className="app-shell relative overflow-hidden">
       <div className="hero-glow" aria-hidden />
       <div className="hero-glow hero-glow--left" aria-hidden />
+      <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
+        <DarkModeToggle />
+      </div>
 
       <div className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-16">
-        <Card className="w-full max-w-[420px] border-white/60 bg-white/85 shadow-[0_30px_80px_rgba(15,23,42,0.15)] backdrop-blur hover:translate-y-0">
+        <Card className="w-full max-w-[420px] border-white/60 bg-white/85 shadow-[0_30px_80px_rgba(15,23,42,0.15)] backdrop-blur hover:translate-y-0 dark:bg-slate-900/80">
           <div className="mb-6 space-y-3 text-center">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#E7E1D8] bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
+            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#E7E1D8] bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-500 text-[11px] font-semibold text-white shadow-sm">
                 N
               </span>
               NovaSend
             </div>
-            <h1 className="font-display text-2xl font-semibold text-slate-900 sm:text-3xl">Sign in to your workspace</h1>
-            <p className="text-sm text-slate-600">Continue with Google to access your dashboard.</p>
+            <h1 className="font-display text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-3xl">Sign in to your workspace</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Continue with Google to access your dashboard.</p>
           </div>
 
           {hasAuthError ? (
@@ -70,12 +74,12 @@ export default function SignInPage() {
             Continue with Google
           </Button>
 
-          <p className="mt-4 text-center text-xs text-slate-500">
+          <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
             By continuing, you agree to use this workspace for approved campaigns.
           </p>
 
           <div className="mt-6 text-center">
-            <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-slate-900">
+            <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100">
               Back to home
             </Link>
           </div>

@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { Card } from "@/components/Card";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 export default function AuthErrorPage() {
   return (
-    <div className="app-shell flex min-h-screen items-center justify-center px-4">
+    <div className="app-shell relative flex min-h-screen items-center justify-center px-4">
+      <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+        <DarkModeToggle />
+      </div>
       <Card className="w-full max-w-md text-center hover:translate-y-0">
         <div className="mx-auto mb-4 inline-flex rounded-lg border border-rose-200 bg-rose-50 p-2">
           <AlertTriangle className="h-5 w-5 text-rose-600" />

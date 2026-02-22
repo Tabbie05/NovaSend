@@ -66,14 +66,14 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
 
   return (
     <Card className="border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(15,23,42,0.08)] hover:translate-y-0 hover:shadow-[0_26px_60px_rgba(15,23,42,0.12)]">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Recent Messages</h3>
-        <div className="inline-flex rounded-lg border border-[#E7E1D8] bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
+        <div className="inline-flex w-full rounded-lg border border-[#E7E1D8] bg-white p-1 dark:border-slate-700 dark:bg-slate-900 sm:w-auto">
           {(["all", "sent", "failed"] as StatusFilter[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+              className={`flex-1 rounded-md px-2.5 py-1 text-xs transition-colors sm:flex-none ${
                 statusFilter === tab
                   ? "bg-emerald-50 text-emerald-700 dark:bg-slate-700 dark:text-slate-100"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
@@ -111,7 +111,7 @@ export function MessageHistory({ channel, refreshTrigger }: MessageHistoryProps)
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-4 flex flex-col gap-2 text-xs text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
         <span>Page {page} of {totalPages}</span>
         <div className="flex gap-2">
           <button

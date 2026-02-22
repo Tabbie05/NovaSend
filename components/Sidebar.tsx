@@ -20,14 +20,17 @@ const navItems = [
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/", redirect: true });
+  };
 
   return (
     <>
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-[#E7E1D8] bg-white/80 p-4 backdrop-blur transition-transform duration-200 dark:border-slate-700 dark:bg-slate-900/80",
+          "fixed inset-y-0 left-0 z-40 flex w-[86vw] max-w-72 flex-col border-r border-[#E7E1D8] bg-white/80 p-4 backdrop-blur transition-transform duration-200 dark:border-slate-700 dark:bg-slate-900/80",
           open ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0"
+          "lg:w-72 lg:translate-x-0"
         )}
       >
         <div className="mb-6 flex items-center justify-between px-2">
@@ -38,6 +41,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <span className="font-display text-sm font-semibold tracking-tight">NovaSend</span>
           </Link>
           <button
+            type="button"
             onClick={onClose}
             className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-slate-500 shadow-sm lg:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
             aria-label="Close sidebar"
@@ -77,7 +81,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{session?.user?.name || "User"}</p>
           <p className="truncate text-xs text-slate-500 dark:text-slate-400">{session?.user?.email}</p>
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            type="button"
+            onClick={handleSignOut}
             className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#E7E1D8] bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             <LogOut className="h-4 w-4 text-slate-500 dark:text-slate-300" />
@@ -88,6 +93,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       {open ? (
         <button
+          type="button"
           aria-label="Close sidebar backdrop"
           onClick={onClose}
           className="fixed inset-0 z-30 bg-slate-900/20 lg:hidden"
@@ -100,6 +106,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 export function SidebarMobileTrigger({ onOpen }: { onOpen: () => void }) {
   return (
       <button
+        type="button"
         onClick={onOpen}
         className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-slate-600 shadow-sm lg:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         aria-label="Open sidebar"

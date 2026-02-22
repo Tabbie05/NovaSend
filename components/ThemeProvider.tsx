@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
+const STORAGE_KEY = "novasend-theme";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -16,18 +17,39 @@ const ThemeContext = createContext<ThemeContextValue>({
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const stored = (localStorage.getItem("novasend-theme") as Theme | null) || "light";
-    setTheme(stored);
-    document.documentElement.classList.toggle("dark", stored === "dark");
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const initialTheme: Theme = stored === "dark" ? "dark" : "light";
+    setTheme(initialTheme);
+    setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem(STORAGE_KEY, theme);
+  }, [theme, isReady]);
+
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) {
+        return;
+      }
+
+      const nextTheme: Theme = event.newValue === "dark" ? "dark" : "light";
+      setTheme(nextTheme);
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    localStorage.setItem("novasend-theme", next);
-    document.documentElement.classList.toggle("dark", next === "dark");
+    setTheme((current) => (current === "light" ? "dark" : "light"));
   };
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;

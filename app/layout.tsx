@@ -33,6 +33,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem("novasend-theme");
+                  var resolved = theme === "dark" ? "dark" : "light";
+                  document.documentElement.classList.toggle("dark", resolved === "dark");
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${display.variable} ${body.variable} antialiased`}>
         <SessionProvider>
           <ThemeProvider>

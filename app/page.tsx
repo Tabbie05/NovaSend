@@ -77,7 +77,15 @@ export default function LandingPage() {
           </div>
 
           <Card className="page-enter relative border-white/60 bg-white/85 shadow-[0_24px_70px_rgba(15,23,42,0.15)] backdrop-blur dark:bg-slate-900/75">
-            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Dashboard Preview</p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">How NovaSend Works</p>
+              <span className="rounded-full border border-[#E7E1D8] bg-white px-2.5 py-1 text-[11px] font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                Preview only
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              This sample explains the flow. Actual sending happens inside WhatsApp Inbox or SMS Inbox after sign in.
+            </p>
             <div className="mt-4 space-y-3">
               <div className="rounded-lg border border-[#E7E1D8] bg-white/80 p-3 dark:border-slate-700 dark:bg-slate-800/85">
                 <p className="text-xs text-slate-500 dark:text-slate-400">Campaign Context</p>
@@ -89,9 +97,16 @@ export default function LandingPage() {
                   Limited-time weekend offer: save up to 40% before Sunday midnight. Shop now.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">WhatsApp</div>
-                <div className="rounded-lg border border-[#E7E1D8] bg-white p-2 text-center text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">SMS</div>
+              <div className="space-y-2">
+                <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">Sample channel output</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-dashed border-[#D7D0C5] bg-white/70 p-2 text-center text-xs font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    WhatsApp preview
+                  </div>
+                  <div className="rounded-lg border border-dashed border-[#D7D0C5] bg-white/70 p-2 text-center text-xs font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    SMS preview
+                  </div>
+                </div>
               </div>
             </div>
           </Card>

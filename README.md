@@ -201,10 +201,14 @@ https://YOUR_DOMAIN/api/auth/callback/google
 Add screenshots under `public/screenshots/` and update links below:
 
 ```md
-![Landing Page](public/screenshots/landing.png)
-![Dashboard Overview](public/screenshots/dashboard-overview.png)
-![WhatsApp Inbox](public/screenshots/whatsapp-inbox.png)
-![SMS Inbox](public/screenshots/sms-inbox.png)
+![Landing Page]<img width="1366" height="647" alt="image" src="https://github.com/user-attachments/assets/7a2e6de9-35cf-4763-9044-997dc061904b" />
+
+![Dashboard Overview]<img width="1366" height="647" alt="image" src="https://github.com/user-attachments/assets/a953990f-3302-45b6-b0e3-e83a424a3345" />
+
+![WhatsApp Inbox]![Capture](https://github.com/user-attachments/assets/14d85a8b-0e5f-4102-be83-5cc8ba90f65d)
+
+![SMS Inbox]<img width="1366" height="649" alt="image" src="https://github.com/user-attachments/assets/9c91d354-4835-4b7b-b46c-2d399d60ba91" />
+
 ```
 
 ## Author
